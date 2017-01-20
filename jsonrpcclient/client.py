@@ -110,11 +110,12 @@ class Client(with_metaclass(ABCMeta, object)):
         return None
 
     @abstractmethod
-    def _send_message(self, request, **kwargs):
+    def _send_message(self, request, get_response, **kwargs):
         """Transport the request to the server. Override this method in the
         protocol-specific subclasses.
 
         :param request: A JSON-RPC request, in dict format.
+        :param get_response: Boolean indicating if a response is to be returned
         :returns: The processed response - for requests, it will be the result
         part of the response, None for notifications, or an entire jsonrpc
         response for batch requests.
@@ -168,7 +169,7 @@ class Client(with_metaclass(ABCMeta, object)):
         :param kwargs: Keyword arguments passed to the remote procedure.
         :return: The payload (i.e. the ``result`` part of the response).
         """
-        return self.send(Notification(method_name, *args, **kwargs))
+        return self.send(Notification(method_name, *args, **kwargs), False)
 
     def request(self, method_name, *args, **kwargs):
         #:pylint:disable=line-too-long
@@ -186,7 +187,7 @@ class Client(with_metaclass(ABCMeta, object)):
         :return: The payload (i.e. the ``result`` part of the response).
         """
         #:pylint:enable=line-too-long
-        return self.send(Request(method_name, *args, **kwargs))
+        return self.send(Request(method_name, *args, **kwargs), True)
 
     def __getattr__(self, name):
         """This gives us an alternate way to make a request::

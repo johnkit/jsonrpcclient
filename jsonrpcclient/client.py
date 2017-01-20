@@ -83,7 +83,8 @@ class Client(with_metaclass(ABCMeta, object)):
         """
         if response:
             # Log the response before processing it
-            self._log_response(response, log_extra, log_format)
+            if config.log_responses:
+                self._log_response(response, log_extra, log_format)
             # If it's a json string, parse to object
             if isinstance(response, basestring):
                 try:
@@ -156,7 +157,8 @@ class Client(with_metaclass(ABCMeta, object)):
         # set the extra details to include in the log entry
         self._prepare_request(request, **kwargs)
         # Log the request
-        self._log_request(request, request.log_extra, request.log_format)
+        if config.log_requests:
+            self._log_request(request, request.log_extra, request.log_format)
         # Call abstract method to transport the message, returning either the
         # processed response, or a future which promises to process eventually
         return self._send_message(request, **kwargs)

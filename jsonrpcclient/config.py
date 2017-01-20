@@ -15,3 +15,9 @@ validate = True
 #: Configure the ``id`` part of requests. Can be "decimal", "hex", "random" or
 #: "uuid".
 ids = 'decimal'
+
+#: Log requests
+log_requests = True
+
+#: Log responses
+log_responses = True
